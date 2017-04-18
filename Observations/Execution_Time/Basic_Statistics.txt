@@ -1,0 +1,11 @@
+df = query('select max(V1) from energy_sample_data1');
+
+Start date and time using str method of datetime object:
+2016-12-05 16:43:30.594025
+   max(V1)
+0   242.45
+End date and time using str method of datetime object:
+2016-12-05 16:54:10.945136
+
+
+=============================================================================================================================================
