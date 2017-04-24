@@ -4,7 +4,8 @@
 	#mid_pos: selected point to insert anomaly, it can be any value provided the below condition is satisfied.
 	#x: percentage increase of selected point i.e the anomaly point to be added.
 	#count: number of points to be injected/updated to make it anomaly from the mid point.
-
+#output:
+	#t_num: returns the injected array
 def add_anomaly_dynamically(num,x,count,mid_pos):
     t_num = list(num)
     if (mid_pos + count >= len(t_num)) and (mid_pos - count < 0):
