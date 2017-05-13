@@ -1,0 +1,151 @@
+%\PassOptionsToPackage{table}{xcolor}
+
+%\documentclass[longdoc,colorback,linedtoc,accentcolor=tud9d,12pt,table]{tudreport}
+
+\documentclass[longdoc,noheadingspace,linedtoc,colorback,table,accentcolor=tud9d,12pt,toc=listof,toc=bibliography]{tudreport} %tud0b
+
+%----------------------------------------------------------------------------------------
+% Packages
+%----------------------------------------------------------------------------------------
+\usepackage[english]{babel} 
+%\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
+
+\usepackage{amsmath} %Maths
+\usepackage{graphicx} % Graphiken einbinden: hier f"ur pdflatex 
+
+\usepackage{acronym}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{comment}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage[parfill]{parskip}
+
+\usepackage[ddmmyyyy]{datetime}
+\renewcommand{\dateseparator}{.}
+
+\definecolor{ao}{rgb}{0.0, 0.5, 0.0}
+\definecolor{americanrose}{rgb}{1.0, 0.01, 0.24}
+
+\usepackage{algorithmic,algorithm}
+\newtheorem{definition}{Definition}
+\usepackage{afterpage}
+
+\usepackage[labelformat=simple]{subcaption}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+
+\usepackage[numbers]{natbib}
+
+%----------------------------------------------------------------------------------------
+%	REFERENCING
+%----------------------------------------------------------------------------------------
+\usepackage[pdftex,hyperfootnotes=true,pdfpagelabels]{hyperref}
+	\pdfcompresslevel=9
+	\pdfadjustspacing=1	
+\hypersetup{%
+	pdftitle={Detecting Attacks, Intrusions and Anomalies in Smart Grids},%
+	pdfauthor={Arun Kumar Naranahalli Anjanappa, TK, TU Darmstadt},%
+	pdfview=FitH,
+	pdfstartview=FitV
+}
+
+\usepackage[noabbrev, nameinlink, capitalise]{cleveref}
+
+\newcounter{dummy}
+
+%----------------------------------------------------------------------------------------
+%TITLE PAGE
+%----------------------------------------------------------------------------------------
+\usepackage{wrapfig}
+
+\title{\vspace{-2.5cm}
+	\begin{wrapfigure}{r}{4cm}
+		\vspace{-0.5cm}
+		\includegraphics[scale=1.1]{tk}
+	\end{wrapfigure} 
+	Detecting Attacks,\\ Intrusions and Anomalies \\in Smart Grids
+}
+
+%\title{\begin{minipage}[c][2cm]{0.75\textwidth}
+%				 Integration of Network Coding
+%               and Topology Control \\
+%					 \end{minipage}\hfill%\hspace{10mm}
+%					\begin{minipage}[b][2cm]{0.17\textwidth}
+%					\centering
+%					 \includegraphics[width=33mm]{tk}
+%                 \end{minipage}
+%                 }
+   
+   
+\subtitle{Masterarbeit}
+\subsubtitle{Arun Kumar Naranahalli Anjanappa \\ 
+\vspace{2mm} 
+Pr{\"u}fer: Prof. Dr. Max M{\"u}hlh{\"a}user \\
+Betreuer: Carlos Garcia, M.Sc. \\ 
+\vspace{2mm}
+Darmstadt, 18.05.2017}
+              
+
+\institution{Fachbereich Informatik \\ Telekooperation \\ Prof. Dr. Max M\"uhlh\"auser} 
+
+%----------------------------------------------------------------------------------------
+%Upper Title Back
+%----------------------------------------------------------------------------------------
+\uppertitleback{\textbf{Detecting Attacks, Intrusions and Anomalies in Smart Grids} \\ \bigskip 
+Masterarbeit von Arun Kumar Naranahalli Anjanappa \\ 
+Pr\"ufer: Prof. Dr. Max M\"uhlh\"auser \\
+Betreuer: Carlos Garcia, M.Sc. \\  
+Tag der Einreichung: 18.05.2017}
+
+
+%-----------------------------------------------------------------------------------------
+%DOCUMENT BEGINS
+%-----------------------------------------------------------------------------------------
+\begin{document}
+\pagenumbering{roman}
+\maketitle	
+\input{chapters/Declaration}
+
+\input{chapters/abstract-german}
+ 
+\input{chapters/abstract}
+
+\input{chapters/Acknowledgement}
+
+\tableofcontents
+\cleardoublepage
+
+\pagenumbering{arabic}
+
+\input{chapters/1-Introduction}
+
+\input{chapters/2-Research-questions-and-Challenges}
+
+\input{chapters/3-related-work}
+
+\input{chapters/4-Understanding-Electrical-Data}
+
+\input{chapters/5-proposed-algorithm}
+
+\input{chapters/6-implementation}
+
+\input{chapters/7-evaluation}
+
+\input{chapters/8-conclusion}
+
+%\cleardoublepage
+
+\refstepcounter{dummy}
+\listoffigures
+	
+\refstepcounter{dummy}
+\listoftables
+	
+\refstepcounter{dummy}
+	
+\bibliographystyle{plain}	
+\bibliography{thesis}{}
+
+\end{document}          
+

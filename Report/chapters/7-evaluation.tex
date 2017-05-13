@@ -1,37 +1,8 @@
 \chapter{Evaluation}
 
-In order to evaluate the performance and correctness of our proposed GMM and PCA-based anomaly detection methods, we have trained and tested the models against the set of data provided by \textbf{"PolyEnergyNet – Resiliente Polynetze zur sicheren Energieversorgung"}. We started the analysis by grouping the datasets into weekday and weekends in order to identify the patterns of these two groups separately. We believe the patterns to differ significantly between the weekday and weekends. 
+In order to evaluate the performance and correctness of our proposed GMM and PCA-based anomaly detection methods, we have trained and tested the models against the set of data provided by \textbf{"PolyEnergyNet – Resiliente Polynetze zur sicheren Energieversorgung"}. We started the analysis by grouping the datasets into weekday and weekends in order to identify the patterns of these two groups separately. We believe the patterns to differ significantly between the weekday and weekends. \\
 
-At first, we take one week's Monday to Friday data and split it randomly into 80\% training data and remaining 20\% as the test data. We do not make any assumptions for supervised machine learning techniques here. The training and testing data are used with reference to unsupervised machine learning i.e the training set is composed of unmodified original datasets and the testing test is composed of modified datasets. The training set is used for modeling and learning our proposed algorithms, testing set is used to test the model(which are trained on the original dataset). Testing dataset will undergo anomaly injection procedure, to put few or may be more than few anomalous points. 
-
-The anomaly injection tool is our own contribution to modify the datasets to contain abnormal values in a pre-defined fashion, the description of this tool is explained later in this section in detail. The percentage split is just random considering that the training dataset should be more than the testing dataset. We can choose anything between 50-50 split to 60-40, 70-30, or 80-20 depending on the size of the dataset. Since we have taken one week's data we want to capture most of the statistical values and hence decided to go with 80-20 split. We would also look into evaluating against 70-30 split in future or if the results are not as expected. For this we use the sklearn library's model\_selection.train\_test\_split() function which takes data and percentage variable ( which should be between 0 and 1) as parameters. The percentage variable if set to 0.5 gives us 50 percent training and 50 percent testing split of the data. Similarly, if the variable takes 0.6 then its a 60-40 split and so on. \\
-
-\subsection*{\textbf{Anomaly injection Tool}} 
-\begin{figure}
-\centerline{\includegraphics[totalheight=8cm]{anomaly-injection-identical-data.png}}
-    \caption{Anomaly injection on an array containing all duplicate values. As an example this figure contains an array with all elements of the array having value '100'}
-    \label{fig:ai_iden}
-\end{figure}
-
-We developed an anomaly injection tool to inject anomalies into our dataset to evaluate the accuracy of our anomaly detection methods. This tool manually injects anomalous data at any point of selection. We can even specify the number of anomalous points to inject, when we say injected anomalous points we mean, the existing data values are updated in such a way that the points represents values which looks unusual to the detection algorithms and the algorithms should be able to identify and classify them as anomalous. 
-
-The developed tool has four parameters, \textbf{\textit{num}}, array containing the data, \textbf{\textit{x}}, is the parameter which lets the user to choose the percentage increase user wants to make to the data to look anomalous, \textbf{\textit{mid\_pos}}, the position in the data array where anomaly will be introduced, \textbf{\textit{count}}, will let the user control and keep count on the number of anomalies to put inside the data. One unique feature of this anomaly tool is, we do not need to introduce anomalies which looks obvious, instead, we have designed in such a way as to increase the value of selected point to  \textbf{\textit{x}}\% and additionally we provide the option to set the number of points to be made anomalous( \textbf{\textit{count}}). The count introduces those many anomaly points as the value itself on both sides of the selected point. 
-
-The anomaly value is added to this range which follows a pattern of gradually increasing  from \textbf{\textit{mid\_pos}} - \textbf{\textit{count}} upto \textbf{\textit{mid\_pos}}  and then decreases gradually to   \textbf{\textit{mid\_pos}} + \textbf{\textit{count}} as shown in Figure \ref{fig:ai_iden} and  Figure \ref{fig:ai_rd}.  The distribution of original data and the anamolous data are plotted with simple line plot where x axis represents the index of the elements and y-axis represents the elements itself. The distribution in red depicts the behavior of unmodified elements and the distribution in blue depicts the behavior after injecting anamolies. Figure \ref{fig:ai_iden} shows the anomaly injection pattern for array containing all identical values and Figure \ref{fig:ai_rd} representing anomaly injection pattern for array containing random values. 
-
-Two types of cases has been looked for in this area. One, all identical values elements and two, elements with random values. For identical values just for depicting the behavior of its distribution we used sample data and the results are shown in the Figures \ref{fig:ai_iden} and  Figure \ref{fig:ai_rd}. The point of insertion is at position 6 and number of anomaly points injected = 3 with the percentage of increase x=40\%, as you can see from figure \ref{fig:ai_iden} the mid point at position 6 is increased 40\% (value = 140), either sides of it from position 3 to 6 and 6 to 9 are affected. Similarly to check with random data we used a list of random 10 numbers and injected 3 anomaly points on either sides from the selected middle point with x=40\%. We were successful in injecting the anomaly at the user provided point and range even for the random data as seen in the figure \ref{fig:ai_rd}. 
-\begin{figure}
-\centerline{\includegraphics[totalheight=8cm]{anomaly-injection-random-data.png}}
-    \caption{Anomaly injection on an array containing random data.}
-    \label{fig:ai_rd}
-\end{figure}
-
-This anomaly injection tool can be used as a measure to check the accuracy of our methods. We know where we have injected the data and if the model is able to detect those anomalies which we have injected, then we can assure of a working anomaly detection method for our electrical data. With this tool in place we can also find out the number of false positives, false negatives, true positives as well as true negatives if any in our system. The design goal of this injection tool was mainly to evaluate the precision of our detection technique, to know how much deviation from the normal behavior can our model capture given the range of anomaly points. We assume our model to capture at least the mid point changes done while injecting the anomaly and nearby few points depending on the number of anomalies actually being injected.
-
-
-
-\begin{enumerate}
-\item\textbf{PCA}
+\section{PCA}
 
 We start the evaluation of PCA based anomaly detection method by briefly specifying the steps involved in preprocessing and then dive into describing the performance of our PCA based anomaly detection method. The preprocessing for PCA based anomaly detection will be done as follows:
 \begin{itemize}
@@ -40,51 +11,61 @@ We start the evaluation of PCA based anomaly detection method by briefly specify
 \item\textbf{Normalization:} The smoothed data is normalized by removing the mean of each column and the difference to mean is stored as the normalized value. What we are doing here is scaling the values of each column of our dataset to represent mean 0 and unit variance. Our data contains columns such as voltages, current, power, phase displacement values and these values are not measured against a single unit, that is, voltage values are in Volts, current values are in Amperes, power values are in Watt-hour and phase displacement are in Degrees. If we do not normalize this data then the result of PCA for choosing the right number of components will not be accurate. By right number of components we mean that the components may represent variances captured by columns which contain larger values. In our dataset we see that, power values are in the range of thousands to hundreds of thousands, voltages are in range of 200 to 270, current are within 100 to 150, where as phase displacement values are within 1. 
 
 Without normalizing we tend to obtain components of largest values like variances of  power and/or voltages  as high variance since their values are very large and the phase displacement values which are too low can be neglected. To account for this, we scaled the values such that each column had mean of 0 and variance of 1, this ensured that the variance in all the columns are retained and made sure PCA will consider all the necessary features and thus the components we choose after applying PCA were correct when it comes to identifying the right number of components.
+\end{itemize}
 
-\item\textbf{Extracting relevant features:} Once the data is smoothed and normalized, the next step we carried out was to divide all the features based on the amount of variances captured by applying PCA . Our aim here was to group the features into two subgroups which we call as normal subspace and residual subspace. Normal subspace is composed of components capturing the major variances and residual subspace is composed of components capturing the minor variance which are usually ignored. Our contribution will be researching in this residual subspace as we assume any anomalous data will be captured by this residual subspace and then we define a threshold value above which, we term the data points as tagged as anomalous points. 
+\begin{figure}
+\centerline{\includegraphics[totalheight=8cm]{PCA_fit.png}}
+    \caption{This diagram shows the distribution of data across PCA space. The feature in blue captures the most variance in all the observations as you can see in the figure. The feature represented in green captures the next highest variance whereas the variances which are measured too low by PCA can be seen by the observations in light blue, magenta and red which are almost 0 and forms the residual subspace. X-axis represents the number of observations and y-axis captures the variances of each feature according to the measured observations.}
+    \label{fig:pca}
+\end{figure}
+
+\textbf{Extracting relevant features:} Once the data is smoothed and normalized, the next step we carried out was to divide all the features based on the amount of variances captured by applying PCA . Our aim here was to group the features into two subgroups which we call as normal subspace and residual subspace. Normal subspace is composed of components capturing the major variances and residual subspace is composed of components capturing the minor variance which are usually ignored. Our contribution will be researching in this residual subspace as we assume any anomalous data will be captured by this residual subspace and then we define a threshold value above which, we term the data points as tagged as anomalous points. 
    
 \begin{figure}
 \centerline{\includegraphics[totalheight=8cm]{PCA_cusum_variance.png}}
-    \caption{Cumulative Sum of PCA explained variance.}
+    \caption{This graph shows the cumulative sum of PCA explained variance. The x-axis corresponds to number of features considered for constructing the PCA and the y-axis denotes the cumulative sum of variances captured by components. The y-axis has values from 0 to 1 with 1 indicating 100\% variance.}
     \label{fig:PCA_cusum_variance}
 \end{figure}
 
-\item\textbf{Threshold:} An optimal threshold is defined to distinguish between normal and anomalous data. As discussed earlier while describing our PCA based anomaly detection method, we define a threshold value derived from calculating Squared Prediction Error. All the values above this threshold are considered as anomalies. 
+\textbf{Threshold:} An optimal threshold is defined to distinguish between normal and anomalous data. As discussed earlier while describing our PCA based anomaly detection method, we define a threshold value derived from calculating Squared Prediction Error. All the values above this threshold are considered as anomalies. 
 
-\item\textbf{Results:} We fit the PCA model for all the 9 columns of our data and transform our data to PCA axes. The resultant PCA model divided the data into two orthogonal subspaces namely, normal subspace and residual subspace. Normal subspace is constituted of 'n' components based on the percentage of variance we wish to retain. The percentage of variances are nothing but the eigen values of the corresponding n components. The results of fitting our data with PCA is better explained by the measure "cumulative sum of explained variance ratio" as shown in the Figure \ref{fig:PCA_cusum_variance}. From the figure, we can explain the variances of all components. Component 0 which is the first component captures 70\% of the variance or has the largest eigen value, component 1 together with component 0 captures about 91.9\% variance, component 2 added  to the first two will account for 99.1\% and so on. 
+\textbf{Results:} We fit the PCA model for all the 9 columns of our data and transform our data to PCA axes. 
 \begin{figure}
 \centerline{\includegraphics[totalheight=8cm]{SPE_error.png}}
-    \caption{Results of SPE Error value against the data}
+    \caption{Results of SPE Error value against the data. This figure shows the distribution of each day's data. Week's all five working days SPE calculated value is shown as five different distribution in the plot. Each distribution separately corresponds to each day's electricity usage pattern of the area under consideration. Spikes in the third and fifth distribution are the largest spikes with bigger Square Prediction Error(SPE) value.}
     \label{fig:spe}
-\end{figure}
-We had to play around with our experiments to come up with the right amount of residual space taking into consideration how much variances should we capture in normal subspace and how much variance should be allowed to retain in residual subspace. We evaluated starting from two components explaining 91.9\% through five components explaining 99.9\% of variance.
-\end{itemize}
+\end{figure}The resultant PCA model divided the data into two orthogonal subspaces namely, normal subspace and residual subspace. Normal subspace is constituted of 'n' components based on the percentage of variance we wish to retain. The percentage of variances are nothing but the eigen values of the corresponding n components. The results of fitting our data with PCA is better explained by the measure "cumulative sum of explained variance ratio" as shown in the Fig \ref{fig:PCA_cusum_variance}. From the figure, we can explain the variances of all components. Component 0 which is the first component captures 70\% of the variance or has the largest eigen value, component 1 together with component 0 captures about 91.9\% variance, component 2 added  to the first two will account for 99.1\% and so on. 
 
-\item\textbf{GMM}
+We had to play around with our experiments to come up with the right amount of residual space taking into consideration how much variances should we capture in normal subspace and how much variance should be allowed to retain in residual subspace. We evaluated starting from two components explaining 91.9\% through five components explaining 99.9\% of variance.\\
+
+
+\section{GMM}
 
 We follow a similar procedure as we followed for PCA based approach. The GMM based anomaly detection results when compared to PCA based methods were quite satisful and we were able to detect both the injected anomalies and the unusual behavioral data in our dataset.
 
 \begin{itemize}
-\item\textbf{Dataset and preprocessing:} We took same one weeks data from Monday to Friday which we used for PCA as well. This data was subjected to filtering and data smoothing similar to the steps followed under PCA. In order to account for equal variability the dataset had to undergo dimensionality reduction for which we used the principal component analysis. From the variance explained by each component we made a decision to use first three prinicpal components which were able to capture 99.9\% variance as can be seen in the Figure \ref{fig:PCA_cusum_variance}.
+\item\textbf{Dataset and preprocessing:} We took same one weeks data from Monday to Friday which we used for PCA as well. This data was subjected to filtering and data smoothing similar to the steps followed under PCA. In order to account for equal variability the dataset had to undergo dimensionality reduction for which we used the principal component analysis. From the variance explained by each component we made a decision to use first three prinicpal components which were able to capture 99.9\% variance as can be seen in the Fig \ref{fig:PCA_cusum_variance}.
 
 \begin{figure}
 \centerline{\includegraphics[totalheight=8cm]{BIC_AIC.png}}
-    \caption{BIC score for the data}
+    \caption{BIC score for the data. Applied on the data to determine the number of clusters to be used. The point at which the BIC value is lower is considered as the number to be used as the number of clusters. The plot has a lower value at cluster number = 20. }
     \label{fig:bic}
 \end{figure}
 
-\item\textbf{Model the data:} The data was fitted using the Gaussian Mixture Model function readily available with the python package of scikit learn. To efficiently model our data and to understand the underlying behavior using GMM, we had to carefully choose the fitting parameters. We measure the correctness and the perfectness of our model by carefully looking at,  the \textit{number of clusters}. 
+\item\textbf{Model the data:} The data was fitted using the Gaussian Mixture Model function readily available with the python package of scikit learn. To efficiently model our data and to understand the underlying behavior using GMM, we had to carefully choose the fitting parameters. Model selection is done using the Bayesian Information Criterion as shown in the Fig \ref{fig:bic}.  We measure the correctness and the perfectness of our model by carefully looking at,  the \textit{number of clusters}. 
 
-Cluster number will determine how well our GMM will fit our data. GMM uses the Expectation-Maximization algorithm as described earlier in our work to assign data points to the clusters. If the clusters are too less, then the model will underfit the data constraining all the data points into these small clusters and if the number of cluster is too high, then data which are closely related could be placed in different clusters leading to overfitting of the data. To handle this condition of overfitting and underfitting we use Bayesian Information Criterion(BIC) score to estimate the right number of clusters. We chose 50 as the initial cluster number and gradually reduced in steps of 10 keeping in my mind of the overfitting criteria and finally came down to use 20 as the number of clusters to GMM which is as shown in the Figure \ref{fig:bic}.
+Cluster number will determine how well our GMM will fit our data. GMM uses the Expectation-Maximization algorithm as described earlier in our work to assign data points to the clusters. If the clusters are too less, then the model will underfit the data constraining all the data points into these small clusters and if the number of cluster is too high, then data which are closely related could be placed in different clusters leading to overfitting of the data. To handle this condition of overfitting and underfitting we use Bayesian Information Criterion(BIC) score to estimate the right number of clusters. We chose 50 as the initial cluster number and gradually reduced in steps of 10 keeping in my mind of the overfitting criteria and finally came down to use 20 as the number of clusters to GMM.
+
+The advantage of using Bayesian Information Criterion is, it does not require the prior information of the data and does not even need to train the model to come up with right number of clusters. It uses a penalized maximum likelihood model selection criterion which reduces the complexity, where BIC favors the model which maximizes the BIC values.
 
 \begin{figure}
 \centerline{\includegraphics[totalheight=8cm]{Boxplot_Zscore.png}}
-    \caption{BIC score for the data}
+    \caption{Box plot depicting the injected anomalous data}
     \label{fig:bic_zs}
 \end{figure}
-\item\textbf{Results:} The results obtained using GMM on our electrical data is visualized in Figure \ref{fig:bic_zs} and Figure \ref{fig:ss}. Figure \ref{fig:bic_zs} visually illustrate many points outside the boxplot's inter-quartile range with unfilled circles. These points are clearly anomalous in nature compared to other data points which fall within inter-quartile range. The unfilled circles formed by the unusual data points are results of injecting anomalies into our data using the anomaly tool developed and described earlier. For our model to perform better it should be able to identify these injected points and classify them as anomalous. 
+\item\textbf{Results:} The results obtained using GMM on our electrical data is visualized in Fig \ref{fig:bic_zs} and Fig \ref{fig:ss}. Fig \ref{fig:bic_zs} visually illustrate many points outside the boxplot's inter-quartile range with unfilled circles. These points are clearly anomalous in nature compared to other data points which fall within inter-quartile range. The unfilled circles formed by the unusual data points are results of injecting anomalies into our data using the anomaly tool developed and described earlier. For our model to perform better it should be able to identify these injected points and classify them as anomalous. 
 
-The score samples are the measure of weighted log probabilities of the data points obtained after fitting the test data injected with anomalies to GMM. The points are plotted in the form of histogram as expressed by Figure \ref{fig:ss}. We calculate the confidence intervals from the obtained score sample values of each data point. With the assumption of data following Gaussian distribution, we go by defining an optimal threshold value based on percentage of confidence intervals we wish to retain and standard deviation measure.
+The score samples are the measure of weighted log probabilities of the data points obtained after fitting the test data injected with anomalies to GMM. The points are plotted in the form of histogram as expressed by Fig\ref{fig:ss}. We calculate the confidence intervals from the obtained score sample values of each data point. With the assumption of data following Gaussian distribution, we go by defining an optimal threshold value based on percentage of confidence intervals we wish to retain and standard deviation measure.
 
 We considered weighted log probabilities or score samples as a measure to distinguish between normal data and abnormal data. Normal data are the points which have high score sample values, that is values closer to 0 and all the points which tend to move away from 0 have very low probability score. Thereby limiting these low probability values to be equal to some threshold, we derive a margin and say all the points falling above this margin as anomalous. 
 
@@ -94,15 +75,13 @@ With 2.5 times standard deviation and confidence interval of 95\% we obtained a 
 
 From now on, everytime we calculate the count of number of anomalies detected by our model to be the count as result calculated currently minus 81 which we saw in the original dataset. We inserted anomalies manually as well as with our injection tool. With the manual injection we were able to detect all the manually injected anomalies, this was obvious since we had changed the voltages and current units to a value which looks really obvious to anyone looking at the data itself. So we are happy with the first step of detection process in obvious looking anomalies. The next step was to insert anomalies with our injection tool. We started with initial injection of only few points in the range of 10 and with an increase of  40\% to the midpoint chosen as the point of injection. We remind you, the anomalies are inserted on either side of this mean point, count will determine the number of points on either side of mean is affected and the share of these points are with respect to the mid point.
 
-The results show that our method were able to efficiently detect these points as well. The detection was not 100\% since the values are increased with a pattern as discussed previously, that is the value increases slowly upto the mean and gradually decreases after the mean. Since there is only small variation to the data points which are at the extreme ends of the point chosen for insertion, we believed our model to not detect these points. And fortunately, we were able to detect the points which were closer to the extreme ends, infact 6 to 8 observations out of 10 were detected with confidence intervals of 95\% and standard deviation of 2.5. 
+The results show that our method was able to efficiently detect these points as well. The detection was not 100\% since the values are increased with a pattern as discussed previously, that is the value increases slowly upto the mean and gradually decreases after the mean. Since there is only small variation to the data points which are at the extreme ends of the point chosen for insertion, we believed our model to not detect these points. And fortunately, we were able to detect the points which were closer to the extreme ends, infact 6 to 8 observations out of 10 were detected with confidence intervals of 95\% and standard deviation of 2.5. 
 \begin{figure}
 \centerline{\includegraphics[totalheight=8cm]{Score_samples.png}}
-    \caption{BIC score for the data}
+    \caption{Weighted log probabilities for the data}
     \label{fig:ss}
 \end{figure}
 
 \end{itemize}
-
-\end{enumerate}
 
 \label{sec:Eval}
